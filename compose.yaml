@@ -1,0 +1,17 @@
+services:
+  pulsedb:
+    build: .
+    ports:
+      - "127.0.0.1:8001:8001"
+    environment:
+      DATABASE_PATH: /data/pulsedb.db
+    volumes:
+      - stream-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+volumes:
+  stream-data:
